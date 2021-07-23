@@ -299,3 +299,4 @@ pdeplot3D(modelTwo,'ColorMapData',result.VonMisesStress, 'Deformation',result.Di
 title('Simulated Model Deformation with a scale factor of %d', 350)
 colormap('jet')
 %}
+
