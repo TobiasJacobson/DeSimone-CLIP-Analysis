@@ -1,11 +1,81 @@
 %{
-sequentialAnalysis.m is intended to do model analysis of the supplied 
-model layer by layer as it prints, as opposed to the entire finished model
-like is done pProc.m 
+    sequentialAnalysis.m is intended to do model analysis of the supplied 
+    model layer by layer to simulate forces as it prints, as opposed to the entire finished model
+    like is done in main.m 
+
+
+    Functions from: Sunil Bhandari (2021). slice_stl_create_path(triangles,slice_height), 
+    (https://www.mathworks.com/matlabcentral/fileexchange/62113-slice_stl_create_path-triangles-slice_height), 
+    MATLAB Central File Exchange. Retrieved July 23, 2021.
 %}
 
+%% Adding path to be able to call functions in folder 'upload'
+addpath 'upload'
+% stl_slice_and_plot() % calling example script
+figure(1)
+grid on
+triangles = read_binary_stl_file('models/tiered v1.stl');
+% triangles = read_binary_stl_file('models/turret v2.stl');
+% triangles = read_binary_stl_file('models/arrowhead v1.stl');
+plot_stl(triangles);
+xlabel('x')
+ylabel('y')
+zlabel('z')
+
+%% Read the stl file (Binary and ascii options
+triangles = read_binary_stl_file('models/tiered v1.stl');
+% triangles = read_binary_stl_file('models/turret v2.stl');
+% triangles = read_binary_stl_file('models/arrowhead v1.stl');
+
+% triangles = read_ascii_stl_file('models/tiered v1');
+
+%% Rotate the triangles in desired axis,save original as well
+original = triangles;
+%triangles = orient_stl(triangles,'z');
+triangles = rotate_stl(triangles,'x',0);
+
+%% Designate slice increment (mm) and slice model
+slice_height = 0.4;
+tic;[movelist, z_slices] = slice_stl_create_path(triangles, slice_height);toc;
+
+%% Testing something
+figure(2)
+hold on;
+grid on
+xlabel('x')
+ylabel('y')
+zlabel('z')
+view(15,23);
+axis([-Inf Inf -Inf Inf z_slices(1) z_slices(end)])
+for i = 1: size(movelist,2)
+    mlst_all = movelist{i};     
+    if ~isempty(mlst_all)
+        x = mlst_all(:,1);
+        y = mlst_all(:,2);
+        z = ones(size(mlst_all,1),1)*z_slices(i);
+        plot3(x,y,z,'b')
+    end
+end   
+%% Print Sliced model
+figure(3)
+grid on
+plot_slices(movelist,z_slices, 0)
+xlabel('x')
+ylabel('y')
+zlabel('z')
+
+% figure(4)
+% x = x(~isnan(x))';
+% y = y(~isnan(y))';
+% z = z(~isnan(z))';
+% stlwrite('test.stl',x,y,z)
+
+
+
+%% Old attempt at slicing stl 
+%{
 % Import a model and plot the mesh
-importedModel = 'ASTM.stl';
+importedModel = 'models/ASTM.stl';
 model = createpde(1);
 importGeometry(model,importedModel);
 generateMesh(model, 'Hmax', 2);
@@ -85,3 +155,4 @@ scatter3(xPartial, yPartial,zPartial,'o')
 % lighting phong
 % shading interp
 % colorbar EastOutside
+%}
