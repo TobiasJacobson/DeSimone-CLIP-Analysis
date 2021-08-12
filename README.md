@@ -5,7 +5,7 @@ These scripts are intended to do an assortment of stess and strain testing as we
 
 Various functions from:  
 
-Partial Differential Equations Toolbox
+Partial Differential Equations Toolbox - MATLAB
 
 Sunil Bhandari (2021). slice_stl_create_path(triangles,slice_height) (https://www.mathworks.com/matlabcentral/fileexchange/62113-slice_stl_create_path-triangles-slice_height), MATLAB Central File Exchange. Retrieved August 12, 2021.
 
