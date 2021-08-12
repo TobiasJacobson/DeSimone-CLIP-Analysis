@@ -4,7 +4,7 @@
 %%% Note:  In order to run the script, you must install the Partial Differential Equation Toolbox %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [] = singleModelAnalysis(stl, ms, ym, pr, md, cf, ff, fv, ft, fm, vstress, vstrain, vdeflection)
+function [] = singleModelAnalysis(stl, ms, ym, pr, md, cf, ff, fv, ft, fm, vstress, vstrain, vdeflection, ds)
     %% Define stl model to use
     % Single stl model for complete analysis
     stltoload = char(stl);
@@ -28,6 +28,7 @@ function [] = singleModelAnalysis(stl, ms, ym, pr, md, cf, ff, fv, ft, fm, vstre
 
     % Used for deflection analysis
     viewDeflection = vdeflection; % Do deflection analysis [y/n]
+    defScale = ds; % Deflection deformation scale
 
     %%
     %%%%% PDE Meshing %%%%%%
@@ -167,10 +168,10 @@ function [] = singleModelAnalysis(stl, ms, ym, pr, md, cf, ff, fv, ft, fm, vstre
         pdeplot3D(structuralmodel,'ColorMapData',structuralResults.Displacement.uz)
         title('z-displacement')
         colormap('jet')
-        figure(1)
+        figure(14)
         pdeplot3D(structuralmodel,'ColorMapData',structuralResults.VonMisesStress, 'Deformation',structuralResults.Displacement, ...
-            'DeformationScaleFactor',0)
-        title('Simulated Model Deformation with a scale factor of 0%')
+            'DeformationScaleFactor',defScale)
+        title( ['Simulated Model Deformation with a scale factor of ' num2str( defScale ) '%'] )
         colormap('jet')
     end
 end

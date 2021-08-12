@@ -4,7 +4,7 @@
     of a print. Showing model/print characteristics as the print progresses
 
     Must first define model properties and material properties
-    The current proerties are for an ASTM dog bone model and the UMA 90 @CARBON resin
+    The current proerties are for an the tiered v1 micro needle and the UMA 90 @CARBON resin
 
 %}
 
@@ -27,10 +27,11 @@ forceMagnitude = -10;  % The displacement force magnitude
 viewStress = 'n'; % View stress and principle stress analysis? [y/n]
 viewStrain = 'n'; % View strain and principle strain analysis? [y/n]
 viewDeflection = 'y'; % Do deflection analysis [y/n]
+defScale = 0; %0.01 % Deflection Deformation Scale
 
 
 singleModelAnalysis(stlLoad, modelScale, youngsModulus, poissonsRatio, massDensity, constrainedFaces, forceFace, forceVertex, ...
-    forceType, forceMagnitude, viewStress, viewStrain, viewDeflection)
+    forceType, forceMagnitude, viewStress, viewStrain, viewDeflection, defScale)
 
 %{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Call something from sequential analysis to return stl's %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
