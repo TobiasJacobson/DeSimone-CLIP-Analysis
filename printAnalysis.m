@@ -23,28 +23,31 @@ forceVertex = [5, 6, 15, 16, 25, 26, 39, 44, 49, 54, 59, 64, 73, 78, 83, 88, 93,
         99, 104, 109, 114, 119, 124, 133, 138, 143, 148, 153, 158, 159, 164, 169, ...
         174, 179, 184, 193, 198, 203, 208, 213, 218];
 forceType = 'ZDisplacement'; % Options: Displacement [x;y;z], XDisplacement, YDisplacement, ZDisplacement, RDisplacement
-forceMagnitude = -10;  % The displacement force magnitude
+forceMagnitude = 0;  % The displacement force magnitude
 viewStress = 'n'; % View stress and principle stress analysis? [y/n]
 viewStrain = 'n'; % View strain and principle strain analysis? [y/n]
 viewDeflection = 'y'; % Do deflection analysis [y/n]
-defScale = 0; %0.01 % Deflection Deformation Scale
+defScale = 0.01; %0.01 % Deflection Deformation Scale
 
-
+%{
 singleModelAnalysis(stlLoad, modelScale, youngsModulus, poissonsRatio, massDensity, constrainedFaces, forceFace, forceVertex, ...
     forceType, forceMagnitude, viewStress, viewStrain, viewDeflection, defScale)
 
-%{
+%}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Call something from sequential analysis to return stl's %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Call here 
-stlModel = output from sequential analysis;
+% stlModel = output from sequential analysis;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Run all stls through singleModelAnalysis 
-numStls = 4;
-for i = 1:numStls
-    
-    singleModelAnalysis(stlModel, modelScale, youngsModulus, poissonsRatio, massDensity, constrainedFaces, forceFace, forceType, ...
-        forceMagnitude, viewStress, viewStrain, defHBool, defScale, defAFace, defFFace, defFType, defFMag)
-    
+%% Run all force magnitudes through singleModelAnalysis 
+%
+
+forceM = [0, -10, -50, -100];
+defMat = [];
+numForces = 4;
+for i = 1:numForces
+    deflection = singleModelAnalysis(stlLoad, modelScale, youngsModulus, poissonsRatio, massDensity, constrainedFaces, forceFace, forceVertex, ...
+    forceType, forceM(i), viewStress, viewStrain, viewDeflection, defScale);
+    defMat = [defMat; deflection];
 end
 %}

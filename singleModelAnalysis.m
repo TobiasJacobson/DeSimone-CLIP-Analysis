@@ -4,7 +4,7 @@
 %%% Note:  In order to run the script, you must install the Partial Differential Equation Toolbox %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [] = singleModelAnalysis(stl, ms, ym, pr, md, cf, ff, fv, ft, fm, vstress, vstrain, vdeflection, ds)
+function [minDef] = singleModelAnalysis(stl, ms, ym, pr, md, cf, ff, fv, ft, fm, vstress, vstrain, vdeflection, ds)
     %% Define stl model to use
     % Single stl model for complete analysis
     stltoload = char(stl);
@@ -71,7 +71,7 @@ function [] = singleModelAnalysis(stl, ms, ym, pr, md, cf, ff, fv, ft, fm, vstre
     %% Define boundary constraints for constrained faces 
     structuralBC(structuralmodel,'Face',constrainedFaces,'Constraint','fixed'); %  UMA 90 ASTM example (6 left, 8 right, 4 top, 9 bottom)
     % Define Body Load (simply its body weight under gravity) Note: would be different if suspended in resin/vat
-    structuralBodyLoad(structuralmodel,'GravitationalAcceleration',[0;0;-9.8]); % [x,y,z]
+%     structuralBodyLoad(structuralmodel,'GravitationalAcceleration',[0;0;-9.8]); % [x,y,z]
 
     %% Define boundary conditions for applied forces
     % For faces -- 
@@ -142,11 +142,14 @@ function [] = singleModelAnalysis(stl, ms, ym, pr, md, cf, ff, fv, ft, fm, vstre
 
     %% Deflection Analysis
 
+    minUx = min(structuralResults.Displacement.ux);
+    minUy = min(structuralResults.Displacement.uy);
+    minUz = min(structuralResults.Displacement.uz);
+    
+    minDef = [minUx minUy minUz];
+    
     isYes = 'y';
     if contains(viewDeflection, isYes)
-        minUx = min(structuralResults.Displacement.ux);
-        minUy = min(structuralResults.Displacement.uy);
-        minUz = min(structuralResults.Displacement.uz);
         fprintf('Maximal deflection in the x-direction is %g um. \n', minUx*100)
         fprintf('Maximal deflection in the y-direction is %g um. \n', minUy*100)
         fprintf('Maximal deflection in the z-direction is %g um. \n', minUz*100)
@@ -171,7 +174,7 @@ function [] = singleModelAnalysis(stl, ms, ym, pr, md, cf, ff, fv, ft, fm, vstre
         figure(14)
         pdeplot3D(structuralmodel,'ColorMapData',structuralResults.VonMisesStress, 'Deformation',structuralResults.Displacement, ...
             'DeformationScaleFactor',defScale)
-        title( ['Simulated Model Deformation with a scale factor of ' num2str( defScale ) '%'] )
+        title( ['Deformation scale factor: ' num2str( defScale ) '% and applied force: '  num2str(forceMagnitude) 'N'] )
         colormap('jet')
     end
 end
